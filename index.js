@@ -6,7 +6,19 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const allowedOrigins = [process.env.FRONTEND_URL, "https://backend-prj2.onrender.com", "http://localhost:5173", "http://localhost:5174"];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 //Router
 app.use('/user',require('./Router/UserRouter'));
 app.use('/product',require('./Router/ProductRouter'));
